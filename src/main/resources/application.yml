@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/itemmanage?characterEncoding=UTF-8&serverTimezone=UTC
+  #实体类与json互转的时候 属性值为null的不参与序列化
+  jackson:
+    default-property-inclusion: non_null
+
+logging.level.com.faqrobot.api.mapper: debug
+# 防止IDEA不编译xml文件
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.mju.zjj.pojo
+
+sessionOutTime: 60*60*1000
