@@ -40,8 +40,7 @@ public class ShiroConfig {
             role: 拥有某个角色权限才可以访问
          */
         Map<String,String> filterChainDefinitionMap=new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/user/get","perms[add All]");
-        filterChainDefinitionMap.put("/user/add","perms[add All]");
+        filterChainDefinitionMap.put("/user/gets","perms[find All]");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         shiroFilterFactoryBean.setLoginUrl("/user/nologin");
         shiroFilterFactoryBean.setUnauthorizedUrl("/user/noauth");

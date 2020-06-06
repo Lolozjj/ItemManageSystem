@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @program: ItemManageSystem
  * @description:
@@ -31,10 +33,32 @@ public class UserController {
         return userService.insert(user);
     }
 
+    @PostMapping(value = "/delete")
+    public Result delete(Long id){
+        return userService.delete(id);
+    }
+
+    @PostMapping(value = "/modif")
+    public Result update(@RequestBody User user){
+        return userService.update(user);
+    }
+
     @GetMapping(value = "/get")
     public Result getUserByName(@Param("name") String name){
         return userService.getUserByName(name);
     }
+
+    @GetMapping(value = "/gets")
+    public Result getAll(){
+        return userService.getAll();
+    }
+
+    @GetMapping(value = "/getByExample")
+    public Result getUserByExample(User Example) {
+        return userService.getUserByExample(Example);
+    }
+
+
 
     @GetMapping(value = "/role/{id}")
     public Result insert(@PathVariable("id") Long id){
@@ -42,8 +66,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public Result login(String name,String password){
-        return userService.login(name,password);
+    public Result login(HttpServletResponse response,String name, String password){
+        return userService.login(response,name,password);
     }
 
     @PostMapping(value = "/logout")

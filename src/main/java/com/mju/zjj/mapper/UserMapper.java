@@ -17,6 +17,14 @@ import java.util.Set;
 public interface UserMapper {
     public int insert(User user);
 
+    public Set<User> getAll();
+
+    public Set<User> getUserByExample(User Example);
+
+    public int delete(Long id);
+
+    public int update(User user);
+
     public User getUserByName(String name);
 
     public Set<Role> getRoles(Long id);

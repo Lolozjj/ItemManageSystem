@@ -6,11 +6,68 @@
         user(name,age,title,phone,password,salt)
         value(#{name},#{age},#{title},#{phone},#{password},#{salt})
     </insert>
+    <update id="update">
+        update user
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="age!=null">
+                age=#{age},
+            </if>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="phone!=null">
+                phone=#{phone},
+            </if>
+            <if test="password!=null">
+                password=#{password},
+            </if>
+            <if test="salt!=null">
+                salt=#{salt}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delete">
+        delete from user where id=#{id}
+    </delete>
     <select id="getUserByName" resultType="com.mju.zjj.pojo.User">
         select * from user where name=#{name}
     </select>
     <select id="getRoles" resultType="com.mju.zjj.pojo.Role">
         SELECT r.id,r.name,r.des FROM role r,user_role ur WHERE ur.role_id=r.id AND ur.`user_id`=#{id}
     </select>
+    <select id="getAll" resultType="com.mju.zjj.pojo.User">
+        select id,name,age,title,phone,password,create_time from user
+    </select>
+    <select id="getUserByExample" resultType="com.mju.zjj.pojo.User">
+        select id,name,age,title,phone,password,create_time from user
+        <where>
+            <if test="id!=null">
+                id=#{id}
+            </if>
+            <if test="name!=null">
+                and name=#{name}
+            </if>
+            <if test="age!=null">
+                age=#{age}
+            </if>
+            <if test="title!=null">
+                title=#{title}
+            </if>
+            <if test="phone!=null">
+                phone=#{phone}
+            </if>
+            <if test="password!=null">
+                title=#{password}
+            </if>
+            <if test="create_time!=null">
+                title=#{create_time}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

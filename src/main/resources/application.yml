@@ -18,3 +18,7 @@ mybatis:
   type-aliases-package: com.mju.zjj.pojo
 
 sessionOutTime: 60*60*1000
+
+logging:
+  level:
+    com.mju.zjj.mapper: debug

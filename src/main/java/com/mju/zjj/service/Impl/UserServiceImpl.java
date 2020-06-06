@@ -17,6 +17,8 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Random;
 import java.util.Set;
 
@@ -35,11 +37,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result insert(User user) {
-        if(getUserByName(user.getName()).getData()!=null){
+        if (getUserByName(user.getName()).getData() != null) {
             return Result.error("name is exist");
         }
-        try{
-            user.setSalt(new Random().nextInt(2000)+"");//设置盐值
+        try {
+            user.setSalt(new Random().nextInt(2000) + "");//设置盐值
             Object result = new SimpleHash(
                     "MD5",
                     user.getPassword(),
@@ -49,8 +51,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(result.toString());
             userMapper.insert(user);
             return Result.succees("insert ok");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             log.error(e.toString());
             return Result.error("error1");
         }
@@ -58,50 +59,117 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result getUserByName(String name) {
-        log.info("请求搜寻用户信息："+name);
-        try{
-            User user = userMapper.getUserByName(name);
-            if(user!=null){
-                return Result.succees(user);
+    public Result delete(Long id) {
+        log.info("删除id为：" + id + " 的用户");
+        try {
+            int user = userMapper.delete(id);
+            return Result.succees("delete ok");
+        } catch (Exception e) {
+            log.error(e.toString());
+            return Result.error("error");
+        }
+    }
+
+    @Override
+    public Result update(User user) {
+        log.info("修改id为：" + user.getId() + " 的用户");
+
+        try {
+            User old = (User) (getUserByName(user.getName()).getData());
+            if (!old.getPassword().equals(user.getPassword())) {
+                log.info(old.getPassword());
+                log.info(user.getPassword());
+                user.setSalt(new Random().nextInt(2000) + "");//设置盐值
+                Object result = new SimpleHash(
+                        "MD5",
+                        user.getPassword(),
+                        ByteSource.Util.bytes(user.getSalt()),
+                        2
+                );//通过SimpleHash得到MD5加密过的密文密码，此处要与UserRealm的认证，以及ShiroConfig的HashedCredentialsMatcher配合使用
+                user.setPassword(result.toString());
             }
-            else {
+            userMapper.update(user);
+            return Result.succees("modif ok");
+        } catch (Exception e) {
+            log.error(e.toString());
+            return Result.error("error");
+        }
+    }
+
+    @Override
+    public Result getUserByName(String name) {
+        log.info("请求搜寻用户信息：" + name);
+        try {
+            User user = userMapper.getUserByName(name);
+            if (user != null) {
+                return Result.succees(user);
+            } else {
                 return Result.error("no exist the user");
             }
+        } catch (Exception e) {
+            log.error(e.toString());
+            return Result.error("error");
         }
-        catch (Exception e){
+    }
+
+    @Override
+    public Result getAll() {
+        log.info("获得所有用户信息");
+        try {
+            Set<User> users = userMapper.getAll();
+            return Result.succees(users);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return Result.error("error");
+        }
+    }
+
+    @Override
+    public Result getUserByExample(User Example) {
+        log.info("按模板查询用户信息");
+        try {
+            Set<User> users = userMapper.getUserByExample(Example);
+            return Result.succees(users);
+        } catch (Exception e) {
+            log.error(e.toString());
             return Result.error("error");
         }
     }
 
     @Override
     public Result getRoles(Long id) {
-        try{
+        try {
             Set<Role> roles = userMapper.getRoles(id);
             return Result.succees(roles);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
+            log.error(e.toString());
             return Result.error("error");
         }
     }
 
     @Override
-    public Result login(String name, String password) {
-        Subject subject= SecurityUtils.getSubject();
+    public Result login(HttpServletResponse response, String name, String password) {
+        Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(name, password);
-        try{
+        try {
             subject.login(token);//执行登陆
-            return Result.succees("login ok");
-        }catch (UnknownAccountException e){
+//            Cookie cookie = new Cookie("session", token.toString());
+//            cookie.setHttpOnly(true);
+//            cookie.setMaxAge(60 * 60 * 12);
+//            cookie.setPath("/");
+//            response.addCookie(cookie);
+
+            return Result.succees(userMapper.getUserByName(name));
+        } catch (UnknownAccountException e) {
             return Result.error("用户不存在");
-        }catch (IncorrectCredentialsException e){
+        } catch (IncorrectCredentialsException e) {
             return Result.error("密码错误了");
         }
     }
 
     @Override
     public Result logout() {
-        Subject subject=SecurityUtils.getSubject();
+        Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return Result.succees("logout ok");
     }
