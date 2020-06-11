@@ -19,4 +19,6 @@ public interface CourseServie {
     public Result modif(Course course);
 
     public Result find(Course course);
+
+    public Result findByUser(Long id);
 }

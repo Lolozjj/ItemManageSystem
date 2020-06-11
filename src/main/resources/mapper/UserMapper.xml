@@ -48,25 +48,35 @@
             <if test="id!=null">
                 id=#{id}
             </if>
-            <if test="name!=null">
+            <if test="name!=null and name!=''">
                 and name=#{name}
             </if>
             <if test="age!=null">
                 age=#{age}
             </if>
-            <if test="title!=null">
+            <if test="title!=null and title!=''">
                 title=#{title}
             </if>
-            <if test="phone!=null">
+            <if test="phone!=null and phone!=''">
                 phone=#{phone}
             </if>
-            <if test="password!=null">
+            <if test="password!=null and password!=''">
                 title=#{password}
             </if>
             <if test="create_time!=null">
                 title=#{create_time}
             </if>
         </where>
+    </select>
+    <resultMap id="chooseMap" type="com.mju.zjj.pojo.Choose">
+        <id column="id" property="id"/>
+        <result column="uid" property="userId"/>
+        <result column="uname" property="userName"/>
+        <result column="cid" property="courseId"/>
+        <result column="cname" property="courseName"/>
+    </resultMap>
+    <select id="getAllChoose" resultMap="chooseMap">
+        SELECT uc.id as id ,u.id as uid,u.name as uname,c.id as cid,c.name as cname FROM USER u JOIN user_course uc ON u.id=uc.user_id JOIN course c ON uc.course_id=c.id
     </select>
 
 

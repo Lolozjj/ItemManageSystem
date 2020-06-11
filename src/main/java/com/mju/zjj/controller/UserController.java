@@ -58,7 +58,10 @@ public class UserController {
         return userService.getUserByExample(Example);
     }
 
-
+    @GetMapping(value = "/chooses")
+    public Result getAllChoose() {
+        return userService.getAllChoose();
+    }
 
     @GetMapping(value = "/role/{id}")
     public Result insert(@PathVariable("id") Long id){
@@ -77,7 +80,7 @@ public class UserController {
 
     @GetMapping(value = "/noauth")
     public Result unauthorized (){
-        return Result.error("无授权，无法访问");
+        return Result.error("无授权");
     }
 
     @GetMapping(value = "/nologin")

@@ -1,6 +1,7 @@
 package com.mju.zjj.service.Impl;
 
 import com.mju.zjj.mapper.UserMapper;
+import com.mju.zjj.pojo.Choose;
 import com.mju.zjj.pojo.Role;
 import com.mju.zjj.pojo.User;
 import com.mju.zjj.service.UserService;
@@ -73,7 +74,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result update(User user) {
         log.info("修改id为：" + user.getId() + " 的用户");
-
         try {
             User old = (User) (getUserByName(user.getName()).getData());
             if (!old.getPassword().equals(user.getPassword())) {
@@ -117,6 +117,18 @@ public class UserServiceImpl implements UserService {
         log.info("获得所有用户信息");
         try {
             Set<User> users = userMapper.getAll();
+            return Result.succees(users);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return Result.error("error");
+        }
+    }
+
+    @Override
+    public Result getAllChoose() {
+        log.info("获得所有任课信息");
+        try {
+            Set<Choose> users = userMapper.getAllChoose();
             return Result.succees(users);
         } catch (Exception e) {
             log.error(e.toString());

@@ -41,6 +41,12 @@ public class ShiroConfig {
          */
         Map<String,String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/user/gets","perms[find All]");
+        filterChainDefinitionMap.put("/user/register","perms[add All]");
+        filterChainDefinitionMap.put("/user/delete","perms[delete All]");
+        filterChainDefinitionMap.put("/user/modif","perms[modification ALl]");
+
+        filterChainDefinitionMap.put("/courses","perms[find All]");
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         shiroFilterFactoryBean.setLoginUrl("/user/nologin");
         shiroFilterFactoryBean.setUnauthorizedUrl("/user/noauth");

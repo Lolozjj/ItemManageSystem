@@ -4,7 +4,7 @@
 
 
     <insert id="insert">
-        insert into course(id,name,hour) values(#{id},#{name},#{hour})
+        insert into course(name,hour) values(#{name},#{hour})
     </insert>
     <update id="modif">
         update course
@@ -28,11 +28,20 @@
                 id=#{id}
             </if>
             <if test="hour!=null">
-                and hour!=#{hour}
+                and hour=#{hour}
             </if>
-            <if test="name!=null">
-                and name!=#{name}
+            <if test="name!=null and name!=''">
+                and name=#{name}
             </if>
         </where>
+    </select>
+
+    <resultMap id="courseMap" type="com.mju.zjj.pojo.Course">
+        <id column="c.id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="hour" property="hour"/>
+    </resultMap>
+    <select id="findByUser" resultType="com.mju.zjj.pojo.Course">
+        SELECT c.id,name,hour FROM user_course uc JOIN course c ON uc.course_id=c.id  WHERE uc.user_id=#{id}
     </select>
 </mapper>

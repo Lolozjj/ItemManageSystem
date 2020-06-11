@@ -77,4 +77,16 @@ public class CourseServiceImpl implements CourseServie {
             return Result.error("error");
         }
     }
+
+    @Override
+    public Result findByUser(Long id) {
+        try {
+            log.info("查询用户的课程信息：");
+            return Result.succees(courseMapper.findByUser(id));
+        }
+        catch (Exception e){
+            log.error(e.toString());
+            return Result.error("error");
+        }
+    }
 }

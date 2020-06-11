@@ -25,6 +25,8 @@ public interface UserService {
 
     public Result getAll();
 
+    public Result getAllChoose();
+
     public Result getUserByExample(User Example);
 
     public Result getRoles(Long id);

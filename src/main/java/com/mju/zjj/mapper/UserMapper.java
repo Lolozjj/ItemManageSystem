@@ -1,5 +1,6 @@
 package com.mju.zjj.mapper;
 
+import com.mju.zjj.pojo.Choose;
 import com.mju.zjj.pojo.Role;
 import com.mju.zjj.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,6 +21,8 @@ public interface UserMapper {
     public Set<User> getAll();
 
     public Set<User> getUserByExample(User Example);
+
+    public Set<Choose> getAllChoose();
 
     public int delete(Long id);
 

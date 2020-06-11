@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mju.zjj.mapper.ItemMapper">
+
+
+    <insert id="insert">
+        insert into item(content,answer,type,score,select_num,orgin,chapter_id)
+        values(#{content},#{answer},#{type},#{score},0,'手动录入',#{chapter.id})
+    </insert>
+    <update id="modif">
+        update item
+        <set>
+            <if test="content!=null">
+                content=#{content},
+            </if>
+            <if test="answer!=null">
+                answer=#{answer},
+            </if>
+            <if test="type!=null">
+                type=#{type},
+            </if>
+            <if test="score!=null">
+                score=#{score},
+            </if>
+            <if test="orgin!=null">
+                orgin=#{orgin},
+            </if>
+            <if test="chapter!=null">
+                chapter_id=#{chapter.id},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+    <delete id="delete">
+        delete from item where id=#{id}
+    </delete>
+
+
+    <delete id="deleteByChapter">
+        delete from item where chapter_id=#{chapterId}
+    </delete>
+
+
+    <resultMap id="itemMap" type="com.mju.zjj.pojo.Item">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="answer" property="answer"/>
+        <result column="type" property="type"/>
+        <result column="score" property="score"/>
+        <result column="select_num" property="selectSum"/>
+        <result column="create_time" property="createTime"/>
+        <result column="orgin" property="orgin"/>
+    </resultMap>
+    <select id="getItemByChapter" resultMap="itemMap">
+        select * from item where chapter_id=#{id}
+    </select>
+    <select id="getItemByExampleAndChapter" resultMap="itemMap">
+        select * from item
+        <where>
+            <if test="chapter!=null">
+                chapter_id=#{chapter.id}
+            </if>
+            <if test="id!=null">
+                and id=#{id}
+            </if>
+            <if test="content!=null">
+                and content like '%${content}%'
+            </if>
+            <if test="answer!=null">
+                and answer like '%${answer}%'
+            </if>
+            <if test="type!=null">
+                and type like '%${type}%'
+            </if>
+            <if test="selectSum!=null">
+                and selectSum=#{selectSum}
+            </if>
+            <if test="score!=null">
+                and score=#{score}
+            </if>
+        </where>
+    </select>
+    <resultMap id="typeMap" type="com.mju.zjj.pojo.TypeSum">
+        <result property="name" column="type"/>
+        <result property="sum" column="sum"/>
+    </resultMap>
+    <select id="getTypeSumByChapters" parameterType="list" resultMap="typeMap">
+        SELECT TYPE as type, COUNT(*) as sum FROM item  WHERE chapter_id IN
+        <foreach collection="list" index="index" item="chapter" open="(" close=")" separator=",">
+            #{chapter}
+        </foreach>
+        GROUP BY TYPE
+    </select>
+    <select id="getItemOne" resultType="com.mju.zjj.pojo.Item">
+        SELECT * FROM item  WHERE chapter_id IN
+        <foreach collection="chapters" index="index" item="chapter" open="(" close=")" separator=",">
+            #{chapter}
+        </foreach>
+        and type=#{typename}
+    </select>
+
+
+</mapper>

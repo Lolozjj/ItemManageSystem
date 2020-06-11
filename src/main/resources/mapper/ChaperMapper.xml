@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mju.zjj.mapper.ChapterMapper">
+
+
+    <insert id="insert">
+        insert into chapter(name,difficulty,course_id) values(#{name},#{difficulty},#{course.id})
+    </insert>
+    <update id="modif">
+        update chapter
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="difficulty!=null">
+                difficulty=#{difficulty},
+            </if>
+            <if test="course!=null">
+                course_id=#{course.id}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delete">
+        delete from chapter where id=#{id}
+    </delete>
+    <select id="getChapterByCourse" resultType="com.mju.zjj.pojo.Chapter">
+        select * from chapter where course_id=#{id}
+    </select>
+</mapper>
